@@ -27,7 +27,12 @@ pipeline {
 
     stage('Deploy to S3') {
       steps {
-        withAWS(credentials: 'aws-credentials') {
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: 'aws-credentials',
+          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
           sh '''
           aws s3 sync dist/ s3://$AWS_S3_BUCKET --delete
           '''
