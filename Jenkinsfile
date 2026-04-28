@@ -27,9 +27,11 @@ pipeline {
 
     stage('Deploy to S3') {
       steps {
-        sh '''
-        aws s3 sync dist/ s3://$AWS_S3_BUCKET --delete
-        '''
+        withAWS(credentials: 'aws-credentials') {
+          sh '''
+          aws s3 sync dist/ s3://$AWS_S3_BUCKET --delete
+          '''
+        }
       }
     }
   }
